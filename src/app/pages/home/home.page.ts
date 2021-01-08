@@ -7,8 +7,5 @@ import { PokemonService } from "../../services/pokemon.service";
   styleUrls: ["home.page.scss"],
 })
 export class HomePage {
-  constructor(public pokemonService: PokemonService) {
-    this.pokemonService.getPokemon();
-    this.pokemonService.getPokemonTest();
-  }
+  constructor(public pokemonService: PokemonService) {}
 }

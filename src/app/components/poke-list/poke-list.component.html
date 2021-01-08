@@ -1,0 +1,32 @@
+<ion-button (click)="toggleInfiniteScroll()" expand="block">
+  Toggle Infinite Scroll
+</ion-button>
+<ion-spinner name="lines" *ngIf="loading"></ion-spinner>
+<ion-list *ngIf="!loading">
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let pokemon of pokemonList" size="6">
+        <ion-item style="margin: 2">
+          <!-- <ion-label>{{ pokemon.name }}</ion-label> -->
+          <ion-card>
+            <ion-card-header>
+              <ion-img [src]="pokemon.sprites.front_default"></ion-img>
+              <ion-card-title>{{ pokemon.name }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-list>
+<ion-infinite-scroll
+  threshold="100px"
+  (ionInfinite)="loadData($event)"
+  *ngIf="!loading"
+>
+  <ion-infinite-scroll-content
+    loadingSpinner="bubbles"
+    loadingText="Loading more data..."
+  >
+  </ion-infinite-scroll-content>
+</ion-infinite-scroll>

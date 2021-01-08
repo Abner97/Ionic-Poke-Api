@@ -1,3 +1,5 @@
+import { PokemonList } from "./PokemonList";
+
 export class PokemonListInfo {
   public constructor(
     readonly count: number,
