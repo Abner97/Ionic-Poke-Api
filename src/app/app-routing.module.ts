@@ -13,7 +13,7 @@ const routes: Routes = [
     pathMatch: "full",
   },
   {
-    path: "poke-info",
+    path: "poke-info/:pokemonName",
     loadChildren: () =>
       import("./pages/poke-info/poke-info.module").then(
         (m) => m.PokeInfoPageModule

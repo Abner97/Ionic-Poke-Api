@@ -1,9 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, Subject, throwError } from "rxjs";
-import { catchError, retry } from "rxjs/operators";
+import { Observable, Subject } from "rxjs";
 import { Pokemon } from "../models/Pokemon";
-import { PokemonList } from "../models/PokemonList";
 import { PokemonListInfo } from "../models/PokemonListInfo";
 @Injectable({
   providedIn: "root",
@@ -11,17 +9,15 @@ import { PokemonListInfo } from "../models/PokemonListInfo";
 export class PokemonService {
   private pokemonList: Subject<Array<Pokemon>>;
   private pokemonListUrl: string;
-  private tempPokemonList: Array<Pokemon>;
+
   public pokemonListObs: Observable<Array<Pokemon>>;
   private pokemonListInfo: PokemonListInfo;
-  private pokemon: Pokemon;
+
   constructor(private http: HttpClient) {
-    this.tempPokemonList = [];
     this.pokemonList = new Subject();
     this.pokemonListObs = this.pokemonList.asObservable();
 
-    this.pokemonListUrl =
-      " https://pokeapi.co/api/v2/pokemon/?offset=0&limit=60";
+    this.pokemonListUrl = " https://pokeapi.co/api/v2/pokemon/";
   }
 
   async getPokemons() {
@@ -47,9 +43,12 @@ export class PokemonService {
     let pokemon: Pokemon = Pokemon.fromJson(response);
     return pokemon;
   }
-  async getImage(url: string) {
-    let response = await this.http.get(url).toPromise();
-    this.pokemon = Pokemon.fromJson(response);
-    return this.pokemon.sprites.front_default;
+
+  async getPokemonWithName(name: string) {
+    let response = await this.http
+      .get(`https://pokeapi.co/api/v2/pokemon/${name}`)
+      .toPromise();
+    let pokemon: Pokemon = Pokemon.fromJson(response);
+    return pokemon;
   }
 }

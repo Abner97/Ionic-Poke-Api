@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { IonInfiniteScroll } from "@ionic/angular";
+import { NavigationExtras } from "@angular/router";
+import { IonInfiniteScroll, NavController } from "@ionic/angular";
 
 import { Subscription } from "rxjs";
 import { Pokemon } from "src/app/models/Pokemon";
@@ -17,7 +18,10 @@ export class PokeListComponent implements OnInit {
 
   public pokemonList: Array<Pokemon>;
   loading: boolean;
-  constructor(public pokemonService: PokemonService) {
+  constructor(
+    public pokemonService: PokemonService,
+    public navCtrl: NavController
+  ) {
     this.loading = true;
     console.log(this.loading);
 
@@ -38,8 +42,15 @@ export class PokeListComponent implements OnInit {
     this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
   }
 
-  async getPokeImage(url: string) {
-    return this.pokemonService.getImage(url);
+  goToInfo(pokemon: Pokemon) {
+    let navigationExtras: NavigationExtras = {
+      queryParams: {
+        pokemon: JSON.stringify(pokemon),
+      },
+    };
+    this.navCtrl.navigateForward(["poke-info", pokemon.name], {
+      state: pokemon,
+    });
   }
 
   ngOnInit() {

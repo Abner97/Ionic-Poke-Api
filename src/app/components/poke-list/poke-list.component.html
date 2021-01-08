@@ -6,11 +6,11 @@
   <ion-grid>
     <ion-row>
       <ion-col *ngFor="let pokemon of pokemonList" size="6">
-        <ion-item style="margin: 2">
-          <!-- <ion-label>{{ pokemon.name }}</ion-label> -->
+        <ion-item lines="none" (click)="goToInfo(pokemon)">
           <ion-card>
+            <ion-img [src]="pokemon.sprites.front_default"></ion-img>
+
             <ion-card-header>
-              <ion-img [src]="pokemon.sprites.front_default"></ion-img>
               <ion-card-title>{{ pokemon.name }}</ion-card-title>
             </ion-card-header>
           </ion-card>

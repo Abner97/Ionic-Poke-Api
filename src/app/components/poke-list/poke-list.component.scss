@@ -1,0 +1,28 @@
+:host {
+  --ion-card-background: #eeeeee;
+}
+ion-item {
+  padding: 0px;
+  --inner-padding-end: 0px;
+  --padding-start: 0px;
+  --wrapper-padding-end: 2px;
+}
+input-wrapper {
+  border-radius: 20px;
+}
+ion-card {
+  margin: 0px;
+  border-radius: 20px;
+  padding: 2px;
+  height: 99%;
+  width: 100%;
+  ion-card-header {
+    padding: 2px;
+    text-align: center;
+    font-size: 2px;
+  }
+
+  .pokemon-container {
+    background-color: white;
+  }
+}

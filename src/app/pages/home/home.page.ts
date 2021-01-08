@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { LaunchdarklyService } from "src/app/services/launchdarkly.service";
 import { PokemonService } from "../../services/pokemon.service";
 
 @Component({
@@ -7,5 +8,8 @@ import { PokemonService } from "../../services/pokemon.service";
   styleUrls: ["home.page.scss"],
 })
 export class HomePage {
-  constructor(public pokemonService: PokemonService) {}
+  constructor(
+    public pokemonService: PokemonService,
+    public launchDarkly: LaunchdarklyService
+  ) {}
 }
