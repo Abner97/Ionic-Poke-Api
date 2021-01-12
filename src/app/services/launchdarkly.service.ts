@@ -17,6 +17,9 @@ export class LaunchdarklyService {
 
   constructor() {
     this.initialize();
+    this.ldClient.on("initialized", () => {
+      this.ldClient.variation("pokemon-info", true);
+    });
   }
 
   getBooleanFlagObservable(flagName: string) {
@@ -35,18 +38,19 @@ export class LaunchdarklyService {
     }
   }
 
-  public checkForChanges(flagName: string, defaultValue: any) {
-    this.ldClient.on("ready", () => {});
+  checkFlag(flagName: string, defaultValue: any) {
     return this.ldClient.variation(flagName, defaultValue);
   }
 
-  listenChangesOnServer(
+  private listenChangesOnServer(
     flagName: string,
     defaultValue: any,
     subject: Subject<any>
   ) {
-    this.ldClient.on("change", () => {
-      var featureStatus = this.checkForChanges(flagName, defaultValue);
+    this.ldClient.on(`change:${flagName}`, () => {
+      console.log("pokemon-info changed");
+      var featureStatus = this.checkFlag(flagName, defaultValue);
+      console.log(featureStatus);
       subject.next(featureStatus);
     });
   }
@@ -54,10 +58,15 @@ export class LaunchdarklyService {
   initialize() {
     this.user = {
       key: "aa0ceb",
-
       email: "abrahamvega987@gmail.com",
       country: "Panamá",
     };
-    this.ldClient = LDClient.initialize("5ff5da42a793ec0abb9f7267", this.user);
+    this.ldClient = LDClient.initialize("5ff5da42a793ec0abb9f7267", this.user, {
+      bootstrap: "localStorage",
+    });
+
+    this.ldClient.on("change", () => {
+      console.log("something change");
+    });
   }
 }

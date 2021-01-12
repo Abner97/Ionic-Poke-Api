@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
 
-import { PokeInfoPage } from './poke-info.page';
+import { PokeInfoPage } from "./poke-info.page";
 
 const routes: Routes = [
   {
-    path: '',
-    component: PokeInfoPage
-  }
+    path: "",
+    component: PokeInfoPage,
+  },
 ];
 
 @NgModule({

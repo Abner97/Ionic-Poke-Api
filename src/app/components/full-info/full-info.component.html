@@ -1,11 +1,29 @@
 <ion-card>
+  <ion-img
+    [src]="
+      pokemon.sprites.animated
+        ? pokemon.sprites.animated.front_default
+        : pokemon.sprites.other.dream_world.front_default
+    "
+  ></ion-img>
   <ion-card-header>
     <ion-card-subtitle>#{{ pokemon.id }}</ion-card-subtitle>
     <ion-card-title>{{ pokemon.name }}</ion-card-title>
   </ion-card-header>
 
   <ion-card-content>
-    Keep close to Nature's heart... and break clear away, once in awhile, and
-    climb a mountain or spend a week in the woods. Wash your spirit clean.
+    <ion-grid>
+      <ion-row *ngFor="let stat of pokemon.stats">
+        <ion-col size="5">
+          <h2>{{ stat.stat.name }}</h2>
+        </ion-col>
+        <ion-col>
+          <ion-progress-bar
+            [value]="stat.base_stat / 100"
+            [color]="getColor(stat.stat.name)"
+          ></ion-progress-bar>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-card-content>
 </ion-card>

@@ -1,11 +1,15 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { NavigationExtras } from "@angular/router";
-import { IonInfiniteScroll, NavController } from "@ionic/angular";
+import {
+  AlertController,
+  IonInfiniteScroll,
+  NavController,
+} from "@ionic/angular";
 
 import { Subscription } from "rxjs";
 import { Pokemon } from "src/app/models/Pokemon";
-import { PokemonList } from "src/app/models/PokemonList";
 import { PokemonService } from "../../services/pokemon.service";
+import { LaunchdarklyService } from "src/app/services/launchdarkly.service";
 
 @Component({
   selector: "app-poke-list",
@@ -20,7 +24,9 @@ export class PokeListComponent implements OnInit {
   loading: boolean;
   constructor(
     public pokemonService: PokemonService,
-    public navCtrl: NavController
+    public navCtrl: NavController,
+    public luanchDarkly: LaunchdarklyService,
+    public alertController: AlertController
   ) {
     this.loading = true;
     console.log(this.loading);
@@ -34,7 +40,6 @@ export class PokeListComponent implements OnInit {
 
   async loadData(event: any) {
     await this.pokemonService.getPokemons();
-    console.log(this.pokemonList);
     event.target.complete();
   }
 
@@ -42,14 +47,38 @@ export class PokeListComponent implements OnInit {
     this.infiniteScroll.disabled = !this.infiniteScroll.disabled;
   }
 
-  goToInfo(pokemon: Pokemon) {
-    let navigationExtras: NavigationExtras = {
-      queryParams: {
-        pokemon: JSON.stringify(pokemon),
-      },
-    };
-    this.navCtrl.navigateForward(["poke-info", pokemon.name], {
-      state: pokemon,
+  showAlert(message: string) {
+    this.alertController
+      .create({
+        header: "Anuncio",
+        subHeader: "",
+        message: message,
+        buttons: [
+          {
+            text: "Ok",
+            role: "ok",
+            handler: (data) => {
+              this.navCtrl.navigateRoot(["/home"], {
+                state: {},
+                animated: true,
+              });
+            },
+          },
+        ],
+      })
+      .then((res) => {
+        res.present();
+      });
+  }
+
+  goToInfo(pokemon: Pokemon): void {
+    this.luanchDarkly.checkServiceStatus().then(() => {
+      let canGo = this.luanchDarkly.checkFlag("pokemon-info", true);
+      canGo
+        ? this.navCtrl.navigateForward(["poke-info", pokemon.name], {
+            state: pokemon,
+          })
+        : this.showAlert("Servicio no disponible");
     });
   }
 
@@ -62,5 +91,9 @@ export class PokeListComponent implements OnInit {
         });
       }
     );
+  }
+  ionViewDidEnter() {}
+  ionViewDidLeave(): void {
+    this.subscription.unsubscribe();
   }
 }

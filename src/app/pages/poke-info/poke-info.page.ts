@@ -26,14 +26,31 @@ export class PokeInfoPage implements OnInit {
     public launchDarkly: LaunchdarklyService,
     public alertController: AlertController
   ) {
+    this.router.events.subscribe((e: NavigationStart) => {
+      try {
+        this.pokemon = this.router.getCurrentNavigation().extras
+          .state as Pokemon;
+      } catch (err) {
+        const pokemonName = this.route.snapshot.paramMap.get("pokemonName");
+        this.pokemonService.getPokemonWithName(pokemonName).then((pokemon) => {
+          this.pokemon = pokemon;
+        });
+      }
+
+      console.log(this.pokemon);
+    });
+
+    //Verifico que el servicio esté ok
     this.launchDarkly.checkServiceStatus().then((status) => {
       if (status) {
-        this.pokemonInfoStatus = this.launchDarkly.checkForChanges(
+        console.log("launchdarkly is ok");
+        this.launcDarklyStatus = status;
+        this.pokemonInfoStatus = this.launchDarkly.checkFlag(
           "pokemon-info",
           true
         );
-        this.launcDarklyStatus = status;
       } else {
+        //Si launchDarkly no está disponible desactivo el componente
         this.pokemonInfoStatus = false;
       }
 
@@ -41,21 +58,6 @@ export class PokeInfoPage implements OnInit {
         this.showAlert();
       } else {
         console.log("entre");
-        this.router.events.subscribe((e: NavigationStart) => {
-          try {
-            this.pokemon = this.router.getCurrentNavigation().extras
-              .state as Pokemon;
-          } catch (err) {
-            const pokemonName = this.route.snapshot.paramMap.get("pokemonName");
-            this.pokemonService
-              .getPokemonWithName(pokemonName)
-              .then((pokemon) => {
-                this.pokemon = pokemon;
-              });
-          }
-
-          console.log(this.pokemon);
-        });
       }
     });
   }
@@ -90,9 +92,17 @@ export class PokeInfoPage implements OnInit {
       this.pokemonInfoSubs = this.launchDarkly
         .getBooleanFlagObservable("pokemon-info")
         .subscribe((enabled) => {
+          console.log(enabled);
           this.pokemonInfoStatus = enabled;
+          if (!enabled) {
+            this.showAlert();
+          }
         });
     }
+  }
+
+  ionViewDidLeave(): void {
+    this.pokemonInfoSubs.unsubscribe();
   }
   ngOnInit() {}
 }

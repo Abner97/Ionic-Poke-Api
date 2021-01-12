@@ -7,13 +7,6 @@ const routes: Routes = [
     path: "",
     component: HomePage,
   },
-  {
-    path: "poke-info/:pokemonName",
-    loadChildren: () =>
-      import("../../pages/poke-info/poke-info.module").then(
-        (m) => m.PokeInfoPageModule
-      ),
-  },
 ];
 
 @NgModule({
