@@ -19,7 +19,7 @@ $ npm install --save launchdarkly-js-client-sdk
 - Crear una cuenta en [LaunchDarkly](https://launchdarkly.com/).
 - Crear las flags que desee utilizar en la app. (leer el documento de Jira para conocer más).
 - Para modificar el servicio de LaunchDarkly debe editar el archivo **_launchdarkly.service.ts_** que se encuentra en la ruta : /src/app/services/
-  - Lo primero es cambiar el SDK Key por el de tu proyecto Configcat:
+  - Lo primero es cambiar el SDK Key por el del environment al que quieras apuntar en LaunchDarkly:
 
 ```js
 initialize() {
@@ -34,7 +34,7 @@ initialize() {
         department: "QA",
       },
     };
-    //Inicializacion del cliente y seteo del storage que queremos que use el cliente
+    //Inicializacion del cliente, seteo del sdk key y seteo del storage que queremos que use el cliente
     this.ldClient = LDClient.initialize("5ff5da42a793ec0abb9f7267", this.user, {
       bootstrap: "localStorage",
     });
