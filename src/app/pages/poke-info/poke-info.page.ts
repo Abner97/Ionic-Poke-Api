@@ -11,7 +11,7 @@ import { Subscription } from "rxjs";
   templateUrl: "./poke-info.page.html",
   styleUrls: ["./poke-info.page.scss"],
 })
-export class PokeInfoPage implements OnInit {
+export class PokeInfoPage  {
   pokemon: Pokemon;
 
   private pokemonInfoSubs: Subscription;
@@ -27,10 +27,12 @@ export class PokeInfoPage implements OnInit {
     public alertController: AlertController
   ) {
     this.router.events.subscribe((e: NavigationStart) => {
+      //Obtenemos la info de pokemon por ruta para ahorrar ancho de banda
       try {
         this.pokemon = this.router.getCurrentNavigation().extras
           .state as Pokemon;
       } catch (err) {
+        //cuando se hace refresh se consulta la Api para no perder la info
         const pokemonName = this.route.snapshot.paramMap.get("pokemonName");
         this.pokemonService.getPokemonWithName(pokemonName).then((pokemon) => {
           this.pokemon = pokemon;
@@ -45,6 +47,7 @@ export class PokeInfoPage implements OnInit {
       if (status) {
         console.log("launchdarkly is ok");
         this.launcDarklyStatus = status;
+        //Guardo el estado de mi feature
         this.pokemonInfoStatus = this.launchDarkly.checkFlag(
           "pokemon-info",
           true
@@ -54,6 +57,7 @@ export class PokeInfoPage implements OnInit {
         this.pokemonInfoStatus = false;
       }
 
+      //Se activa un alert si el feature está off
       if (!this.pokemonInfoStatus) {
         this.showAlert();
       } else {
@@ -88,6 +92,7 @@ export class PokeInfoPage implements OnInit {
   }
 
   ionViewDidEnter(): void {
+    //Si el servicio está ok empezamos a escuchar por cambios en nuestra flag al suscribirnos a un observable
     if (this.launcDarklyStatus) {
       this.pokemonInfoSubs = this.launchDarkly
         .getBooleanFlagObservable("pokemon-info")
@@ -102,7 +107,8 @@ export class PokeInfoPage implements OnInit {
   }
 
   ionViewDidLeave(): void {
+    //Desuscripción al salir de la pantalla para ahorrar memoria
     this.pokemonInfoSubs.unsubscribe();
   }
-  ngOnInit() {}
+ 
 }

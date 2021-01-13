@@ -1,6 +1,10 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>poke-info</ion-title>
+    <ion-title *ngIf="pokemon">{{pokemon.name.toUpperCase()}}</ion-title>
+    <ion-title *ngIf="!pokemon">Pokemon Info</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
