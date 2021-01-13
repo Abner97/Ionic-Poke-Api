@@ -1,11 +1,11 @@
-# Aplicación de lista de tareas con ConfigCat y CloudBees
+# Aplicación de Pokémon con LaunchDarkly
 
 **Instalación del proyecto**
 
     $ npm install
     $ ionic serve
 
-## Configcat
+## LaunchDarkly
 
 Instalar LaunchDarkly en el proyecto (SDK para JS):
 
@@ -26,7 +26,7 @@ initialize() {
     //Objeto user
     this.user = {
       key: "uhdj56",
-      email: "abraham.497@hotmail.com",
+      email: "correo@corre.com",
       country: "USA",
       custom: {
         platform: this.platformService.getPlatformName(),
